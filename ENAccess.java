@@ -36,69 +36,33 @@ public class CustomerAccess extends Simulation {
             1L,
             Duration.ofMinutes(1).toMillis() * userCount / targetGroupExecutionsPerMinute);
 
-    private static final String pageUrl = "/customers/[room_id]";
+    private static final String pageUrl = "/customers";
 
     // session
     private static final String getUrl1 = "/api/auth/session";
     // ショップ情報取得
     private static final String postUrl1 = "/api/util/db/support/select-selected-shop-id";
-    private static final String postUrl1Body = "{\"retoolUserId\":\"onozuka_harumi@ims-sol.oc.jp\"}";
+    private static final String postUrl1Body = "{\"retoolUserId\":\"hirota_ayaka@ims-sol.oc.jp\"}";
     // 店舗情報取得
     private static final String postUrl2 = "/api/util/db/remote/get-store-name-and-shop-name";
     private static final String postUrl2Body = "{\"shopId\":\"509999\"}";
-    //リモート会員詳細取得
-    private static final String postUrl3 = "/api/CU0200/TopTab/api/remote/get-member-details";
-    private static final String postUrl3Body = "{\"did\":\"_________\", \"shopId\":\"509999\", \"deviceId\":\"________\", \"callGf\":true}";
-    // ショップ代表取組先コード取得
-    private static final String postUrl4 = "/api/CU0200/TopTab/db/remote/get-shop-representative-partner-code";
-    private static final String postUrl4Body = "{\"shopId\":\"509999\"}";
-    // BAアイテム属性取得 - キャッシュ作成日時確認
-    private static final String postUrl5 = "/api/CU0200/TopTab/db/remote/get-ba-item-attributes-create-date-time";
-    private static final String postUrl5Body = "{\"did\":\"\"}";
-    // BAアイテム属性取得 - キャッシュ取得（DB）
-    private static final String postUrl6 = "/api/CU0200/TopTab/db/remote/get-ba-item-attributes";
-    private static final String postUrl6Body = "{\"did\":\"\"}";
-    // BAアイテム属性取得 - キャッシュ削除
-    private static final String postUrl7 = "/api/CU0200/TopTab/db/remote/delete-ba-item-attributes";
-    private static final String postUrl7Body = "{\"did\":\"\"}";
-    // BAアイテム属性取得 - BigQueryから名称データ取得
-    private static final String postUrl8 = "/api/CU0200/TopTab/ba/get-kbi-j-did-meisyo-bb-{0|1|2}";
-    private static final String postUrl8Body = "{\"did\":\"\"}";
-    // BAアイテム属性取得 - キャッシュ書き込み
-    private static final String postUrl9 = "/api/CU0200/TopTab/db/remote/insert-into-ba-item-attributes";
-    private static final String postUrl9Body = "{\"did\":\"\"}";
-    //年間購買金額・回数取得（全体）
-    private static final String postUrl10 = "/api/CU0200/TopTab/ba/get-top-tab-info-by-did-{0|1|2}";
-    private static final String postUrl10Body = "{\"did\":\"\"}";
-    // 利用頻度Top3取得
-    private static final String postUrl12 = "/api/CU0200/TopTab/ba/get-usage-frequency-top3-by-did-{0|1|2}";
-    private static final String postUrl12Body = "{\"did\":\"\"}";
-    // ショップ別年間購買金額取得
-    private static final String postUrl13 = "/api/CU0200/TopTab/ba/get-total-amount-one-year-by-did-{0|1|2}";
-    private static final String postUrl13Body = "{\"did\":\"\", \"representativePartnerCodes\":\"______\"}";
-    //ショップ別前回購買日取得
-    private static final String postUrl14 = "/api/CU0200/TopTab/ba/get-latest-purchase-date-by-did-{0|1|2}";
-    private static final String postUrl14Body = "{\"did\":\"\", \"representativePartnerCodes\":\"______\"}";
-    // 顧客名更新
-    private static final String postUrl15 = "/api/CU0200/api/remote/update-customer-name";
-    private static final String postUrl15Body = "{\"roomId\":\"\", \"shopId\":\"509999\"}";
+    // アンケート名データ取得（ドロップダウン）
+    private static final String postUrl3 = "/api/EN0100/db/remote/get-enquete-name-data";
+    private static final String postUrl3Body = "{\"shopId\":\"509999\"}";
+    // アンケート回答件数取得API
+    private static final String postUrl4 = "/api/EN0100/db/remote/get-enquete-answer-data-count";
+    private static final String postUrl4Body = "{\"shopId\":\"509999\", \"unconfirmedOnly\":false}";
+    // アンケート回答データ取得API
+    private static final String postUrl5 = "/api/EN0100/db/remote/get-enquete-answer-data";
+    private static final String postUrl5Body = "{\"shopId\":\"509999\", \"unconfirmedOnly\":false, \"limit\":18, \"offset\":0, \"sortColumn\":\"create_date_time\", \"sortDesc\":true}";
 
-    private static final String openPageStatusKey = "openCustomerDetailStatus";
+    private static final String openPageStatusKey = "openEnquetesAnswersStatus";
     private static final String sessionStatusKey = "sessionStatus";
     private static final String selectShopStatusKey = "selectSelectedShopIdStatus";
     private static final String storeNameStatusKey = "getStoreNameAndShopNameStatus";
-    private static final String memberDetailsStatusKey = "getMemberDetailsStatus";
-    private static final String shopRepresentativePartnerCodeStatusKey = "getShopRepresentativePartnerCodeStatus";
-    private static final String baItemAttributesCreateDateTimeStatusKey = "getBaItemAttributesCreateDateTimeStatus";
-    private static final String getBaItemAttributesStatusKey = "getBaItemAttributesStatus";
-    private static final String deleteBaItemAttributesStatusKey = "deleteBaItemAttributesStatus";
-    private static final String KbiJDidMeisyoBbStatusKey = "getKbiJDidMeisyoBbStatus";
-    private static final String insertIntoBaItemAttributesStatusKey = "insertIntoBaItemAttributesStatus";
-    private static final String topTabInfoStatusKey = "geTopTabInfoByDidStatus";
-    private static final String usageFrequencyTop3StatusKey = "getUsageFrequencyTop3ByDidStatus";
-    private static final String totalAmountOneYearStatusKey = "getTotalAmountOneYearByDidStatus";
-    private static final String latestPurchaseDateStatusKey = "getLatestPurchaseDateByDidStatus";
-    private static final String customerNameStatusKey = "updateCustomerNameStatus";
+    private static final String enqueteNameStatusKey = "getEnqueteNameDataStatus";
+    private static final String answerCountStatusKey = "getEnqueteAnswerDataCountStatus";
+    private static final String answerDataStatusKey = "getEnqueteAnswerDataStatus";
 
     private static final Map<String, String> commonHeaders = Map.of("Cookie", "#{" + cookieHeaderSessionKey + "}");
     private static final Map<String, String> jsonPostHeaders = Map.of(
@@ -144,20 +108,20 @@ public class CustomerAccess extends Simulation {
             .exec(recordStatusMetric("select-selected-shop-id", selectShopStatusKey))
             .exec(postRequest("get-store-name-and-shop-name", postUrl2, postUrl2Body)
                     .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
-                            .saveAs(memberDetailsStatusKey)))
-            .exec(recordStatusMetric("get-store-name-and-shop-name", memberDetailsStatusKey))
+                            .saveAs(storeNameStatusKey)))
+            .exec(recordStatusMetric("get-store-name-and-shop-name", storeNameStatusKey))
             .exec(postRequest("get-enquete-name-data", postUrl3, postUrl3Body)
                     .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
-                            .saveAs(shopRepresentativePartnerCodeStatusKey)))
-            .exec(recordStatusMetric("get-enquete-name-data", shopRepresentativePartnerCodeStatusKey))
+                            .saveAs(enqueteNameStatusKey)))
+            .exec(recordStatusMetric("get-enquete-name-data", enqueteNameStatusKey))
             .exec(postRequest("get-enquete-answer-data-count", postUrl4, postUrl4Body)
                     .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
-                            .saveAs(baItemAttributesCreateDateTimeStatusKey)))
-            .exec(recordStatusMetric("get-enquete-answer-data-count", baItemAttributesCreateDateTimeStatusKey))
+                            .saveAs(answerCountStatusKey)))
+            .exec(recordStatusMetric("get-enquete-answer-data-count", answerCountStatusKey))
             .exec(postRequest("get-enquete-answer-data", postUrl5, postUrl5Body)
                     .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
-                            .saveAs(getBaItemAttributesStatusKey)))
-            .exec(recordStatusMetric("get-enquete-answer-data", getBaItemAttributesStatusKey));
+                            .saveAs(answerDataStatusKey)))
+            .exec(recordStatusMetric("get-enquete-answer-data", answerDataStatusKey));
 
     private static final ChainBuilder requestGroup = feed(listFeeder(cookieHeaderFeedRecords).circular())
             .exec(group("enquete-fixed-load-request-group")
