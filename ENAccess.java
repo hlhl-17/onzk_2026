@@ -55,7 +55,6 @@ public class CustomerAccess extends Simulation {
     // アンケート回答データ取得API
     private static final String postUrl5 = "/api/EN0100/db/remote/get-enquete-answer-data";
     private static final String postUrl5Body = "{\"shopId\":\"509999\", \"unconfirmedOnly\":false, \"limit\":18, \"offset\":0, \"sortColumn\":\"create_date_time\", \"sortDesc\":true}";
-
     private static final String openPageStatusKey = "openEnquetesAnswersStatus";
     private static final String sessionStatusKey = "sessionStatus";
     private static final String selectShopStatusKey = "selectSelectedShopIdStatus";

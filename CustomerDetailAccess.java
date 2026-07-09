@@ -12,7 +12,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerAccess extends Simulation {
+public class CustomerDetailAccess extends Simulation {
 
     // 一定の負荷強度を維持したまま、試験時間だけを変えて劣化傾向を確認する
 
@@ -71,17 +71,17 @@ public class CustomerAccess extends Simulation {
     private static final String postUrl10 = "/api/CU0200/TopTab/ba/get-top-tab-info-by-did-{0|1|2}";
     private static final String postUrl10Body = "{\"did\":\"\"}";
     // 利用頻度Top3取得
-    private static final String postUrl12 = "/api/CU0200/TopTab/ba/get-usage-frequency-top3-by-did-{0|1|2}";
-    private static final String postUrl12Body = "{\"did\":\"\"}";
+    private static final String postUrl11 = "/api/CU0200/TopTab/ba/get-usage-frequency-top3-by-did-{0|1|2}";
+    private static final String postUrl11Body = "{\"did\":\"\"}";
     // ショップ別年間購買金額取得
-    private static final String postUrl13 = "/api/CU0200/TopTab/ba/get-total-amount-one-year-by-did-{0|1|2}";
-    private static final String postUrl13Body = "{\"did\":\"\", \"representativePartnerCodes\":\"______\"}";
+    private static final String postUrl12 = "/api/CU0200/TopTab/ba/get-total-amount-one-year-by-did-{0|1|2}";
+    private static final String postUrl12Body = "{\"did\":\"\", \"representativePartnerCodes\":\"______\"}";
     //ショップ別前回購買日取得
-    private static final String postUrl14 = "/api/CU0200/TopTab/ba/get-latest-purchase-date-by-did-{0|1|2}";
-    private static final String postUrl14Body = "{\"did\":\"\", \"representativePartnerCodes\":\"______\"}";
+    private static final String postUrl13 = "/api/CU0200/TopTab/ba/get-latest-purchase-date-by-did-{0|1|2}";
+    private static final String postUrl13Body = "{\"did\":\"\", \"representativePartnerCodes\":\"______\"}";
     // 顧客名更新
-    private static final String postUrl15 = "/api/CU0200/api/remote/update-customer-name";
-    private static final String postUrl15Body = "{\"roomId\":\"\", \"shopId\":\"509999\"}";
+    private static final String postUrl14 = "/api/CU0200/api/remote/update-customer-name";
+    private static final String postUrl14Body = "{\"roomId\":\"\", \"shopId\":\"509999\"}";
 
     private static final String openPageStatusKey = "openCustomerDetailStatus";
     private static final String sessionStatusKey = "sessionStatus";
@@ -132,9 +132,9 @@ public class CustomerAccess extends Simulation {
     // これにより、Gatling のレポート上でリクエストごとの成功率を確認できるようになる
     // 例えば、open-enquetes-answers-status-200 というメトリクスは、open-enquetes-answers
     // リクエストのうちステータスコード 200 のものをカウントする
-    private static final ChainBuilder sequentialRequestGroup = exec(getRequest("open-enquetes-answers", pageUrl)
-            .check(status().in(200, 204, 302, 304, 307, 308).saveAs(openPageStatusKey)))
-            .exec(recordStatusMetric("open-enquetes-answers", openPageStatusKey))
+    private static final ChainBuilder sequentialRequestGroup = exec(getRequest("open-customer-detail", pageUrl)
+                     .check(status().in(200, 204, 302, 304, 307, 308).saveAs(openPageStatusKey)))
+            .exec(recordStatusMetric("open-customer-detail", openPageStatusKey))
             .exec(getRequest("session", getUrl1)
                     .check(status().in(200, 204, 302, 304, 307, 308).saveAs(sessionStatusKey)))
             .exec(recordStatusMetric("session", sessionStatusKey))
@@ -144,32 +144,72 @@ public class CustomerAccess extends Simulation {
             .exec(recordStatusMetric("select-selected-shop-id", selectShopStatusKey))
             .exec(postRequest("get-store-name-and-shop-name", postUrl2, postUrl2Body)
                     .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
+                            .saveAs(storeNameStatusKey)))
+            .exec(recordStatusMetric("get-store-name-and-shop-name", storeNameStatusKey))
+            .exec(postRequest("get-member-details", postUrl3, postUrl3Body)
+                    .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
                             .saveAs(memberDetailsStatusKey)))
-            .exec(recordStatusMetric("get-store-name-and-shop-name", memberDetailsStatusKey))
-            .exec(postRequest("get-enquete-name-data", postUrl3, postUrl3Body)
+            .exec(recordStatusMetric("get-member-details", memberDetailsStatusKey))
+            .exec(postRequest("get-shop-representative-partner-code", postUrl4, postUrl4Body)
                     .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
                             .saveAs(shopRepresentativePartnerCodeStatusKey)))
-            .exec(recordStatusMetric("get-enquete-name-data", shopRepresentativePartnerCodeStatusKey))
-            .exec(postRequest("get-enquete-answer-data-count", postUrl4, postUrl4Body)
+            .exec(recordStatusMetric("get-shop-representative-partner-code", shopRepresentativePartnerCodeStatusKey))
+            .exec(postRequest("get-ba-item-attributes-create-date-time", postUrl4, postUrl4Body)
                     .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
                             .saveAs(baItemAttributesCreateDateTimeStatusKey)))
-            .exec(recordStatusMetric("get-enquete-answer-data-count", baItemAttributesCreateDateTimeStatusKey))
-            .exec(postRequest("get-enquete-answer-data", postUrl5, postUrl5Body)
+            .exec(recordStatusMetric("get-ba-item-attributes-create-date-time", baItemAttributesCreateDateTimeStatusKey))
+            .exec(postRequest("get-ba-item-attributes", postUrl5, postUrl5Body)
                     .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
                             .saveAs(getBaItemAttributesStatusKey)))
-            .exec(recordStatusMetric("get-enquete-answer-data", getBaItemAttributesStatusKey));
+            .exec(recordStatusMetric("get-ba-item-attributes", getBaItemAttributesStatusKey))
+            .exec(postRequest("get-ba-item-attributes", postUrl6, postUrl6Body)
+                    .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
+                            .saveAs(getBaItemAttributesStatusKey)))
+            .exec(recordStatusMetric("get-ba-item-attributes", getBaItemAttributesStatusKey))
+            .exec(postRequest("delete-ba-item-attributes", postUrl7, postUrl7Body)
+                    .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
+                            .saveAs(deleteBaItemAttributesStatusKey)))
+            .exec(recordStatusMetric("delete-ba-item-attributes", deleteBaItemAttributesStatusKey))
+            .exec(postRequest("get-kbi-j-did-meisyo-bb", postUrl8, postUrl8Body)
+                    .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
+                            .saveAs(KbiJDidMeisyoBbStatusKey)))
+            .exec(recordStatusMetric("get-kbi-j-did-meisyo-bb", KbiJDidMeisyoBbStatusKey))
+            .exec(postRequest("insert-into-ba-item-attributes", postUrl9, postUrl9Body)
+                    .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
+                            .saveAs(insertIntoBaItemAttributesStatusKey)))
+            .exec(recordStatusMetric("insert-into-ba-item-attributes", insertIntoBaItemAttributesStatusKey))
+            .exec(postRequest("get-top-tab-info-by-did", postUrl10, postUrl10Body)
+                    .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
+                            .saveAs(topTabInfoStatusKey)))
+            .exec(recordStatusMetric("get-top-tab-info-by-did", topTabInfoStatusKey))
+            .exec(postRequest("get-usage-frequency-top3-by-did", postUrl11, postUrl11Body)
+                    .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
+                            .saveAs(usageFrequencyTop3StatusKey)))
+            .exec(recordStatusMetric("get-usage-frequency-top3-by-did", usageFrequencyTop3StatusKey))
+            .exec(postRequest("get-total-amount-one-year-by-did", postUrl12, postUrl12Body)
+                    .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
+                            .saveAs(totalAmountOneYearStatusKey)))
+            .exec(recordStatusMetric("get-total-amount-one-year-by-did", totalAmountOneYearStatusKey))
+            .exec(postRequest("get-latest-purchase-date-by-did", postUrl13, postUrl13Body)
+                    .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
+                            .saveAs(latestPurchaseDateStatusKey)))
+            .exec(recordStatusMetric("get-latest-purchase-date-by-did", latestPurchaseDateStatusKey))
+            .exec(postRequest("update-customer-name", postUrl14, postUrl14Body)
+                    .check(status().in(200, 201, 202, 204, 301, 302, 303, 307, 308)
+                            .saveAs(customerNameStatusKey)))
+            .exec(recordStatusMetric("update-customer-name", customerNameStatusKey));
 
     private static final ChainBuilder requestGroup = feed(listFeeder(cookieHeaderFeedRecords).circular())
-            .exec(group("enquete-fixed-load-request-group")
+            .exec(group("customer-load-request-group")
                     .on(sequentialRequestGroup));
 
-    private static final ScenarioBuilder enqueteScenario = scenario("EnqueteFixedLoadDuration")
+    private static final ScenarioBuilder customerScenario = scenario("CustomerTotalAccess")
             .during(Duration.ofMinutes(targetDurationMinutes))
             .on(
                     pace(Duration.ofMillis(intervalMillis))
                             .exec(requestGroup));
 
     {
-        setUp(enqueteScenario.injectOpen(atOnceUsers(userCount))).protocols(httpProtocol);
+        setUp(customerScenario.injectOpen(atOnceUsers(userCount))).protocols(httpProtocol);
     }
 }
