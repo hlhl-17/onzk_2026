@@ -12,7 +12,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-public class EnqueteFixedLoadDuration extends Simulation {
+public class CustomerAccess extends Simulation {
 
     // 一定の負荷強度を維持したまま、試験時間だけを変えて劣化傾向を確認する
 
@@ -36,7 +36,7 @@ public class EnqueteFixedLoadDuration extends Simulation {
             1L,
             Duration.ofMinutes(1).toMillis() * userCount / targetGroupExecutionsPerMinute);
 
-    private static final String pageUrl = "/enquetes/answers";
+    private static final String pageUrl = "/customers";
 
     // session
     private static final String getUrl1 = "/api/auth/session";
@@ -55,6 +55,7 @@ public class EnqueteFixedLoadDuration extends Simulation {
     // アンケート回答データ取得API
     private static final String postUrl5 = "/api/EN0100/db/remote/get-enquete-answer-data";
     private static final String postUrl5Body = "{\"shopId\":\"509999\", \"unconfirmedOnly\":false, \"limit\":18, \"offset\":0, \"sortColumn\":\"create_date_time\", \"sortDesc\":true}";
+
     private static final String openPageStatusKey = "openEnquetesAnswersStatus";
     private static final String sessionStatusKey = "sessionStatus";
     private static final String selectShopStatusKey = "selectSelectedShopIdStatus";
