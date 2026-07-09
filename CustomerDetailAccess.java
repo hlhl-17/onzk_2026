@@ -16,7 +16,7 @@ public class CustomerDetailAccess extends Simulation {
 
     // 一定の負荷強度を維持したまま、試験時間だけを変えて劣化傾向を確認する
 
-    private static final String baseUrl = "http://qbbngrmtsuptool.bpfdev-awspri1.imhds.net";
+    private static final String baseUrl = "http://dbbngrmtsuptool.bpfdev-awspri1.imhds.net";
     // ピーク時の同時操作人数を VU として定義
     private static final int userCount = 280;
     // 試験継続時間（分）
@@ -36,7 +36,11 @@ public class CustomerDetailAccess extends Simulation {
             1L,
             Duration.ofMinutes(1).toMillis() * userCount / targetGroupExecutionsPerMinute);
 
-    private static final String pageUrl = "/customers/[room_id]";
+    /*
+    TODO did, deviceId, representativePartnerCodes, roomIdをダミーの値からテストで使う値に置き換える
+    44~88行目
+    */
+    private static final String pageUrl = "/customers/[room_id____________________]";
 
     // session
     private static final String getUrl1 = "/api/auth/session";
@@ -48,40 +52,40 @@ public class CustomerDetailAccess extends Simulation {
     private static final String postUrl2Body = "{\"shopId\":\"509999\"}";
     //リモート会員詳細取得
     private static final String postUrl3 = "/api/CU0200/TopTab/api/remote/get-member-details";
-    private static final String postUrl3Body = "{\"did\":\"_________\", \"shopId\":\"509999\", \"deviceId\":\"________\", \"callGf\":true}";
+    private static final String postUrl3Body = "{\"did\":\"___________\", \"shopId\":\"509999\", \"deviceId\":\"________\", \"callGf\":true}";
     // ショップ代表取組先コード取得
     private static final String postUrl4 = "/api/CU0200/TopTab/db/remote/get-shop-representative-partner-code";
     private static final String postUrl4Body = "{\"shopId\":\"509999\"}";
     // BAアイテム属性取得 - キャッシュ作成日時確認
     private static final String postUrl5 = "/api/CU0200/TopTab/db/remote/get-ba-item-attributes-create-date-time";
-    private static final String postUrl5Body = "{\"did\":\"\"}";
+    private static final String postUrl5Body = "{\"did\":\"___________\"}";
     // BAアイテム属性取得 - キャッシュ取得（DB）
     private static final String postUrl6 = "/api/CU0200/TopTab/db/remote/get-ba-item-attributes";
-    private static final String postUrl6Body = "{\"did\":\"\"}";
+    private static final String postUrl6Body = "{\"did\":\"___________\"}";
     // BAアイテム属性取得 - キャッシュ削除
     private static final String postUrl7 = "/api/CU0200/TopTab/db/remote/delete-ba-item-attributes";
-    private static final String postUrl7Body = "{\"did\":\"\"}";
+    private static final String postUrl7Body = "{\"did\":\"___________\"}";
     // BAアイテム属性取得 - BigQueryから名称データ取得
-    private static final String postUrl8 = "/api/CU0200/TopTab/ba/get-kbi-j-did-meisyo-bb-{0|1|2}";
-    private static final String postUrl8Body = "{\"did\":\"\"}";
+    private static final String postUrl8 = "/api/CU0200/TopTab/ba/get-kbi-j-did-meisyo-bb-1";
+    private static final String postUrl8Body = "{\"did\":\"___________\"}";
     // BAアイテム属性取得 - キャッシュ書き込み
     private static final String postUrl9 = "/api/CU0200/TopTab/db/remote/insert-into-ba-item-attributes";
-    private static final String postUrl9Body = "{\"did\":\"\"}";
+    private static final String postUrl9Body = "{\"did\":\"___________\"}";
     //年間購買金額・回数取得（全体）
-    private static final String postUrl10 = "/api/CU0200/TopTab/ba/get-top-tab-info-by-did-{0|1|2}";
-    private static final String postUrl10Body = "{\"did\":\"\"}";
+    private static final String postUrl10 = "/api/CU0200/TopTab/ba/get-top-tab-info-by-did-1";
+    private static final String postUrl10Body = "{\"did\":\"___________\"}";
     // 利用頻度Top3取得
-    private static final String postUrl11 = "/api/CU0200/TopTab/ba/get-usage-frequency-top3-by-did-{0|1|2}";
-    private static final String postUrl11Body = "{\"did\":\"\"}";
+    private static final String postUrl11 = "/api/CU0200/TopTab/ba/get-usage-frequency-top3-by-did-1";
+    private static final String postUrl11Body = "{\"did\":\"___________\"}";
     // ショップ別年間購買金額取得
-    private static final String postUrl12 = "/api/CU0200/TopTab/ba/get-total-amount-one-year-by-did-{0|1|2}";
-    private static final String postUrl12Body = "{\"did\":\"\", \"representativePartnerCodes\":\"______\"}";
+    private static final String postUrl12 = "/api/CU0200/TopTab/ba/get-total-amount-one-year-by-did-1";
+    private static final String postUrl12Body = "{\"did\":\"___________\", \"representativePartnerCodes\":\"__________\"}";
     //ショップ別前回購買日取得
-    private static final String postUrl13 = "/api/CU0200/TopTab/ba/get-latest-purchase-date-by-did-{0|1|2}";
-    private static final String postUrl13Body = "{\"did\":\"\", \"representativePartnerCodes\":\"______\"}";
+    private static final String postUrl13 = "/api/CU0200/TopTab/ba/get-latest-purchase-date-by-did-1";
+    private static final String postUrl13Body = "{\"did\":\"___________\", \"representativePartnerCodes\":\"__________\"}";
     // 顧客名更新
     private static final String postUrl14 = "/api/CU0200/api/remote/update-customer-name";
-    private static final String postUrl14Body = "{\"roomId\":\"\", \"shopId\":\"509999\"}";
+    private static final String postUrl14Body = "{\"roomId\":\"____________________\", \"shopId\":\"509999\"}";
 
     private static final String openPageStatusKey = "openCustomerDetailStatus";
     private static final String sessionStatusKey = "sessionStatus";
