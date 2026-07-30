@@ -38,7 +38,6 @@ public class CustomerDetailAccess extends Simulation {
 
     /*
     TODO did, deviceId, representativePartnerCodes, roomIdをダミーの値からテストで使う値に置き換える
-    44~88行目
     */
     private static final String pageUrl = "/customers/[room_id____________________]";
 
@@ -135,7 +134,7 @@ public class CustomerDetailAccess extends Simulation {
     // check で保存したステータスコードをもとに、リクエストごとの成功/失敗を判定してカスタムメトリクスとして記録する
     // これにより、Gatling のレポート上でリクエストごとの成功率を確認できるようになる
     // 例えば、open-enquetes-answers-status-200 というメトリクスは、open-enquetes-answers
-    // リクエストのうちステータスコード 200 のものをカウントする
+    // リクエストのうちステータスコード 200 のものをカウントする。
     private static final ChainBuilder sequentialRequestGroup = exec(getRequest("open-customer-detail", pageUrl)
                      .check(status().in(200, 204, 302, 304, 307, 308).saveAs(openPageStatusKey)))
             .exec(recordStatusMetric("open-customer-detail", openPageStatusKey))
