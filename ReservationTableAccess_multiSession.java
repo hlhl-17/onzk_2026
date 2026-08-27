@@ -21,10 +21,7 @@ public class ReservationTableAccess_multiSession extends Simulation {
     private static final String cookieHeaderSessionKey = "cookieHeaderValue";
     // Cookie は 1 レコードを 1 セットとして定義し、グループ実行ごとに順番に使い回す
     private static final List<Map<String, Object>> cookieHeaderFeedRecords = List.of(
-            Map.of(cookieHeaderSessionKey, "ここにクッキー値1を入れる"),
-            Map.of(cookieHeaderSessionKey, "ここにクッキー値2を入れる"),
-            Map.of(cookieHeaderSessionKey, "ここにクッキー値3を入れる"),
-            Map.of(cookieHeaderSessionKey, "ここにクッキー値4を入れる"));
+            Map.of(cookieHeaderSessionKey, "ここにクッキー値1を入れる");
 
     private static final String pageUrl = "/reservations";
 
@@ -159,11 +156,11 @@ public class ReservationTableAccess_multiSession extends Simulation {
                 // 性能試験前の開発環境の動作確認用
                 // constantUsersPerSec(1.0 / 60.0).during(Duration.ofMinutes(1)),
 
-                // オンピーク: 180 req/min 相当 (9 API/1シナリオ -> 約 4 scn/min)
-                constantUsersPerSec(4.0 / 60.0).during(Duration.ofMinutes(5)),
+                // オンピーク: 1470 req数 (7 API/1シナリオ -> 約 21 scn/min)
+                constantUsersPerSec(21.0 / 60.0).during(Duration.ofMinutes(10)),
 
-                // オフピーク: 495 req/min 相当 (9 API/1シナリオ -> 約 1 scn/min)
-                constantUsersPerSec(1.0 / 60.0).during(Duration.ofMinutes(55))
+                // オフピーク: 4550 req数 (7 API/1シナリオ -> 約 13 scn/min)
+                constantUsersPerSec(13.0 / 60.0).during(Duration.ofMinutes(50))
         };
     }
 
