@@ -38,10 +38,10 @@ public class ReservationTableAccess_multiSession extends Simulation {
     private static final String postUrl4Body = "{\"shopId\":\"509999\"}";
     //予約データ取得
     private static final String postUrl5 = "/api/RE0300/db/reserve/get-reservation-data";
-    private static final String postUrl5Body = "{\"shopId\":\"509999\", \"limit\":\"___\", \"offset\":\"___\"}";
+    private static final String postUrl5Body = "{\"shopId\":\"509999\", \"limit\":12, \"offset\":0, \"sortColumn\":\"start_date_time\", \"sortDesc\":false, \"status\":[\"before_start\"]}";
     //予約データ件数取得
     private static final String postUrl5 = "/api/RE0300/db/reserve/get-reservation-data-count";
-    private static final String postUrl5Body = "{\"shopId\":\"509999\"}";
+    private static final String postUrl5Body = "{\"shopId\":\"509999\", \"status\":[\"before_start\"]}";
 
     private static final String openPageStatusKey = "openReservationTableStatus";
     private static final String sessionStatusKey = "sessionStatus";
