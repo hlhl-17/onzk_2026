@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ReservationTableAccess_multiSession extends Simulation {
+public class ReservationTableAccess_checkMemoryLeak extends Simulation {
 
     // 一定の負荷強度を維持したまま、試験時間だけを変えて劣化傾向を確認する
 
