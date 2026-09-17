@@ -17,7 +17,7 @@ public class DashboardAccess_checkMemoryLeak extends Simulation {
 
     // 一定の負荷強度を維持したまま、試験時間だけを変えて劣化傾向を確認する
 
-    private static final String baseUrl = "http://qbbngrmtsuptool.bpfdev-awspri1.imhds.net";
+    private static final String baseUrl = "http://dbbngrmtsuptool.bpfdev-awspri1.imhds.net";
     private static final String cookieHeaderSessionKey = "cookieHeaderValue";
     // Cookie は 1 レコードを 1 セットとして定義し、グループ実行ごとに順番に使い回す
     private static final List<Map<String, Object>> cookieHeaderFeedRecords = List.of(
@@ -160,31 +160,31 @@ public class DashboardAccess_checkMemoryLeak extends Simulation {
                     postUrl5,
                     postUrl5Body,
                     countSmsMailErrorStatusKey,
-                    200, 201, 202, 204, 301, 302, 303, 307, 308));
+                    200, 201, 202, 204, 301, 302, 303, 307, 308))
             .exec(execPostWithStatusMetric(
                     "get-week-sales-amount",
                     postUrl6,
                     postUrl6Body,
                     weekSalesAmountStatusKey,
-                    200, 201, 202, 204, 301, 302, 303, 307, 308));
+                    200, 201, 202, 204, 301, 302, 303, 307, 308))
             .exec(execPostWithStatusMetric(
                     "get-unchecked-enquete-alert-message",
                     postUrl7,
                     postUrl7Body,
                     uncheckedEnqueteAlertStatusKey,
-                    200, 201, 202, 204, 301, 302, 303, 307, 308));
+                    200, 201, 202, 204, 301, 302, 303, 307, 308))
             .exec(execPostWithStatusMetric(
                     "get-unconfirmed-purchase-request-alert-message",
                     postUrl8,
                     postUrl8Body,
                     unconfirmedPurchaseRequestAlertStatusKey,
-                    200, 201, 202, 204, 301, 302, 303, 307, 308));
+                    200, 201, 202, 204, 301, 302, 303, 307, 308))
             .exec(execPostWithStatusMetric(
                     "get-count-cart-status",
                     postUrl9,
                     postUrl9Body,
                     countCartStatusKey,
-                    200, 201, 202, 204, 301, 302, 303, 307, 308));
+                    200, 201, 202, 204, 301, 302, 303, 307, 308))
             .exec(execPostWithStatusMetric(
                     "get-store-name-and-shop-name",
                     postUrl10,
@@ -202,13 +202,13 @@ public class DashboardAccess_checkMemoryLeak extends Simulation {
     private static OpenInjectionStep[] setupDefinitions() {
         return new OpenInjectionStep[] {
                 // 性能試験前の開発環境の動作確認用
-                // constantUsersPerSec(1.0 / 60.0).during(Duration.ofMinutes(1)),
+                 constantUsersPerSec(1.0 / 60.0).during(Duration.ofMinutes(1)),
 
-                // オンピーク: 1470 req数 (7 API/1シナリオ -> 約 21 scn/min)
-                constantUsersPerSec(21.0 / 60.0).during(Duration.ofMinutes(10)),
+                // オンピーク: 1470 req数 (12 API/1シナリオ -> 約 21 scn/min)
+//                constantUsersPerSec(21.0 / 60.0).during(Duration.ofMinutes(10)),
 
-                // オフピーク: 4550 req数 (7 API/1シナリオ -> 約 13 scn/min)
-                constantUsersPerSec(13.0 / 60.0).during(Duration.ofMinutes(50))
+                // オフピーク: 4550 req数 (12 API/1シナリオ -> 約 13 scn/min)
+//                constantUsersPerSec(13.0 / 60.0).during(Duration.ofMinutes(50))
         };
     }
 
