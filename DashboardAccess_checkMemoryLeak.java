@@ -1,4 +1,4 @@
-package reservation;
+package dashboard;
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.*;
 
@@ -57,13 +57,18 @@ public class DashboardAccess_checkMemoryLeak extends Simulation {
     private static final String postUrl10 = "/api/util/db/remote/get-store-name-and-shop-name";
     private static final String postUrl10Body = "{\"shopId\":\"111152\"}";
 
-    private static final String openPageStatusKey = "openReservationTableStatus";
+    private static final String openPageStatusKey = "openDashboardStatus";
     private static final String sessionStatusKey = "sessionStatus";
-    private static final String selectShopStatusKey = "selectSelectedShopIdStatus";
+    private static final String noticeStatusKey = "getNoticeStatus";
+    private static final String shopPermissionStatusKey = "getShopPermissionStatus";
+    private static final String countSalesRecordErrorStatusKey = "getCountSalesRecordErrorStatus";
+    private static final String amountForShopIdStatusKey = "getAmountForShopIdStatus";
+    private static final String countSmsMailErrorStatusKey = "getCountSmsMilErrorStatus";
+    private static final String weekSalesAmountStatusKey = "getWeekSalesAmountStatus";
+    private static final String uncheckedEnqueteAlertStatusKey = "getUncheckedEnqueteAlertMessageStatus";
+    private static final String unconfirmedPurchaseRequestAlertStatusKey = "getUnconfirmedPurchaseRequestAlertMessageStatus";
+    private static final String countCartStatusKey = "getCountCartStatus";
     private static final String storeNameStatusKey = "getStoreNameAndShopNameStatus";
-    private static final String reservationTargetsStatusKey= "getReservationTargetsStatus";
-    private static final String reservationDataStatusKey = "getReservationData";
-    private static final String reservationCountStatusKey= "getReservationDataCount";
 
     private static final Map<String, String> commonHeaders = Map.of("Cookie", "#{" + cookieHeaderSessionKey + "}");
     private static final Map<String, String> jsonPostHeaders = Map.of(
@@ -121,48 +126,77 @@ public class DashboardAccess_checkMemoryLeak extends Simulation {
     // 例えば、open-enquetes-answers-status-200 というメトリクスは、open-enquetes-answers
     // リクエストのうちステータスコード 200 のものをカウントする。
     private static final ChainBuilder sequentialRequestGroup = execGetWithStatusMetric(
-            "open-reservation-table",
+            "open-dashboard",
             pageUrl,
             openPageStatusKey,
             200, 204, 302, 304, 307, 308)
             .exec(execGetWithStatusMetric("session", getUrl1, sessionStatusKey, 200, 204, 302, 304, 307, 308))
             .exec(execPostWithStatusMetric(
-                    "select-selected-shop-id",
+                    "get-notice",
                     postUrl1,
                     postUrl1Body,
-                    selectShopStatusKey,
+                    noticeStatusKey,
                     200, 201, 202, 204, 301, 302, 303, 307, 308))
             .exec(execPostWithStatusMetric(
-                    "get-store-name-and-shop-name",
+                    "get-shop-permission",
                     postUrl2,
                     postUrl2Body,
-                    storeNameStatusKey,
+                    shopPermissionStatusKey,
                     200, 201, 202, 204, 301, 302, 303, 307, 308))
             .exec(execPostWithStatusMetric(
-                    "get-reservation-targets",
+                    "get-count-sales-record-error",
                     postUrl3,
                     postUrl3Body,
-                    reservationTargetsStatusKey,
+                    countSalesRecordErrorStatusKey,
                     200, 201, 202, 204, 301, 302, 303, 307, 308))
             .exec(execPostWithStatusMetric(
-                    "get-reservation-data",
+                    "get-amount-for-shop-id",
                     postUrl4,
                     postUrl4Body,
-                    reservationDataStatusKey,
+                    amountForShopIdStatusKey,
                     200, 201, 202, 204, 301, 302, 303, 307, 308))
             .exec(execPostWithStatusMetric(
-                    "get-reservation-data-count",
+                    "get-count-sms-mail-error",
                     postUrl5,
                     postUrl5Body,
-                    reservationCountStatusKey,
+                    countSmsMailErrorStatusKey,
+                    200, 201, 202, 204, 301, 302, 303, 307, 308));
+            .exec(execPostWithStatusMetric(
+                    "get-week-sales-amount",
+                    postUrl6,
+                    postUrl6Body,
+                    weekSalesAmountStatusKey,
+                    200, 201, 202, 204, 301, 302, 303, 307, 308));
+            .exec(execPostWithStatusMetric(
+                    "get-unchecked-enquete-alert-message",
+                    postUrl7,
+                    postUrl7Body,
+                    uncheckedEnqueteAlertStatusKey,
+                    200, 201, 202, 204, 301, 302, 303, 307, 308));
+            .exec(execPostWithStatusMetric(
+                    "get-unconfirmed-purchase-request-alert-message",
+                    postUrl8,
+                    postUrl8Body,
+                    unconfirmedPurchaseRequestAlertStatusKey,
+                    200, 201, 202, 204, 301, 302, 303, 307, 308));
+            .exec(execPostWithStatusMetric(
+                    "get-count-cart-status",
+                    postUrl9,
+                    postUrl9Body,
+                    countCartStatusKey,
+                    200, 201, 202, 204, 301, 302, 303, 307, 308));
+            .exec(execPostWithStatusMetric(
+                    "get-store-name-and-shop-name",
+                    postUrl10,
+                    postUrl10Body,
+                    storeNameStatusKey,
                     200, 201, 202, 204, 301, 302, 303, 307, 308));
 
-
     private static final ChainBuilder requestGroup = feed(listFeeder(cookieHeaderFeedRecords).circular())
-            .exec(group("reservation-load-request-group")
+            .exec(group("dashboard-load-request-group")
                     .on(sequentialRequestGroup));
 
-    private static final ScenarioBuilder reservationScenario = scenario("ReservationTableAccess_checkMemoryLeak")
+    private static final ScenarioBuilder dashboardScenario = scenario("DashboardAccess_checkMemoryLeak")
             .exec(requestGroup);
 
     private static OpenInjectionStep[] setupDefinitions() {
@@ -179,6 +213,6 @@ public class DashboardAccess_checkMemoryLeak extends Simulation {
     }
 
     {
-        setUp(reservationScenario.injectOpen(setupDefinitions())).protocols(httpProtocol);
+        setUp(dashboardScenario.injectOpen(setupDefinitions())).protocols(httpProtocol);
     }
 }
